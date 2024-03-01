@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+    html {
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    html body {
+      font-family: "Poppins", sans-serif;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: -webkit-gradient(linear, left top, left bottom, from(#001f3f), to(#111)) no-repeat;
+      background: linear-gradient(#001f3f, #111) no-repeat;
+      background-size: cover;
+      color: white;
+    }
+
+    .game_container .btn {
+      padding: 10px 20px;
+      border-radius: 7px;
+      font-size: 1.5em;
+      border: none;
+      cursor: pointer;
+    }
+
+    .game_container .win_screen {
+      display: none;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      margin: auto;
+      text-align: center;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      vertical-align: middle;
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
+      height: -webkit-fit-content;
+      height: -moz-fit-content;
+      height: fit-content;
+    }
+
+    .game_container .win_screen .winner_title {
+      font-size: 4em;
+      margin-bottom: 100px;
+      color: #01FF70;
+    }
+
+    .game_container .win_screen .btn.start_game {
+      background-color: #0074D9;
+      color: white;
+    }
+
+    .game_container .win_screen .btn.start_game:hover {
+      background-color: #3ba4ff;
+    }
+
+    .game_container .core_game {
+      display: none;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      margin-top: 50px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .game_container .core_game .submit_input {
+      display: inline-block;
+      position: relative;
+      background-color: transparent;
+      border: 1px solid #0074D9;
+      color: white;
+    }
+
+    .game_container .core_game .submit_input:hover {
+      background-color: #0074D9;
+    }
+
+    .game_container .core_game .labels {
+
+      display: flex;
+
+      justify-content: center;
+    }
+
+    .game_container .core_game .labels .title {
+      margin: 0 120px;
+      font-size: 3em;
+    }
+
+    .game_container .core_game .labels .title_bulls {
+      color: white;
+    }
+
+    .game_container .core_game .labels .title_cows {
+      color: white;
+    }
+
+    .game_container .core_game .number_container .num {
+      font-size: 3em;
+      width: 5%;
+      color: white;
+      border: 1px solid #0074D9;
+      background-color: transparent;
+      border-radius: 7px;
+      cursor: pointer;
+      position: relative;
+      margin: 40px 0;
+      text-align: center;
+      padding: 5px;
+    }
+
+    .game_container .core_game .number_container .num::before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 100px;
+      height: 100px;
+      z-index: 1;
+    }
+
+    .game_container .core_game .number_container .num.selected {
+      border: 1px solid #7FDBFF;
+    }
+
+    .game_container .starting_screen {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      margin: auto;
+      text-align: center;
+      vertical-align: middle;
+      width: 100%;
+      height: 100%;
+
+    }
+
+    .game_container .starting_screen .starting_title {
+      font-size: 70px;
+      margin-bottom: 50px;
+      margin-top: 200px;
+      color: white;
+    }
+
+    .game_container .starting_screen .btn.start_game {
+      background-color: #0074D9;
+      color: white;
+    }
+
+    .game_container .starting_screen .btn.start_game:hover {
+      background-color: #3ba4ff;
+    }
+
+    #console {
+      text-align: center;
+      color: white;
+      border: 1px solid #0074D9;
+      background-color: transparent;
+      border-radius: 7px;
+      height: 250px;
+      font-size: 20px;
+      width: 50%;
+      margin: 0 auto;
+
+      margin-top: 20px;
+
+    }
+
+    .description {
+      margin: 0 auto;
+      width: 80%;
+      margin-top: 2rem;
+      color: #b4b4b4;
+    }
+  </style>
+  <title>Bulls & Cows</title>
+</head>
+
+<body>
+  <div class="game_container">
+    <div class="starting_screen">
+      <div class="starting_title">Bulls & Cows</div>
+      <button class="btn start_game">Start Game</button>
+      <div class="description"> You have to guess a randomly generated 4 digit number.
+        After each guess, you will get feedback about the number of matches:
+        if you guess a digit in the correct position, it is called a "bull",
+        if you match a digit but in the wrong position, it is called a "cow".</div>
+    </div>
+
+    <div class="core_game">
+      <div class="labels">
+        <div class="title title_bulls">Bulls: <span class="bulls_count">0</span></div>
+        <div class="title title_cows">Cows: <span class="cows_count">0</span></div>
+      </div>
+
+      <div class="number_container">
+        <input type="text" class="num num_a selected">
+        <input type="text" class="num num_b">
+        <input type="text" class="num num_c">
+        <input type="text" class="num num_d">
+      </div>
+
+      <button class="btn submit_input">Go</button>
+
+      <div> <textarea style="resize: none;" placeholder="Your guesses will appear here" name="console" id="console"
+          cols="50" rows="20" readonly></textarea></div>
+
+
+    </div>
+
+
+    <div class="win_screen">
+      <div class="winner_title">You won!</div>
+      <button class="btn start_game">Restart?</button>
+    </div>
+  </div>
+
+  <script>
+
+    function randomNumber() {
+      var number = Math.floor(Math.random() * 10);
+      return number
+    }
+    function computerNumber() {
+      var fourth = randomNumber();
+      for (var i; i = 1; i++) {
+        var third = randomNumber();
+        var second = randomNumber();
+        var first = randomNumber();
+        if (third != fourth && second != fourth && second != third && first != fourth && first != third && first != second) { break }
+      }
+      var rnd = fourth.toString() + third.toString() + second.toString() + first.toString();
+      console.log(rnd);
+      return rnd;
+    }
+
+    rnd = computerNumber();
+
+    function check(userInput, rnd) {
+      let cows = 0;
+      let bulls = 0;
+
+      for (i = 0; i < 4; i++) {
+        let char = userInput[i];
+        if (rnd.includes(char)) {
+          if (rnd[i] == char) bulls += 1;
+          else
+            cows += 1;
+        }
+      }
+      return {
+        cows: cows,
+        bulls: bulls
+      }
+
+    }
+  </script>
+
+  <script>
+    let cons = document.getElementById("console");
+    let rnd = computerNumber();
+    let nums = document.querySelectorAll("input.num")
+
+    document.querySelectorAll(".btn.start_game").forEach(btn => {
+      btn.addEventListener("click", e => {
+        document.querySelector(".starting_screen").style.display = "none";
+        document.querySelector(".core_game").style.display = "block";
+        document.querySelector(".win_screen").style.display = "none";
+
+        rnd = computerNumber();
+        nums.forEach(num => num.value = "")
+        document.querySelector(".bulls_count").innerText = "0"
+        document.querySelector(".cows_count").innerText = "0"
+
+
+      })
+    })
+
+    nums.forEach(num => {
+      num.addEventListener("click", e => {
+        e.preventDefault();
+        nums.forEach(_num => _num.classList.remove("selected"));
+
+        num.classList.toggle("selected");
+      })
+
+      num.addEventListener("keyup", e => {
+        if (/[0-9]{1}/.test(e.key))
+          num.value = e.key;
+        else num.value = num.value.substr(0, num.value.length - 1)
+      })
+
+      num.addEventListener("keydown", e => {
+        if (/[0-9]{1}/.test(e.key))
+          num.value = " ";
+      })
+    })
+
+    function GetUserInput() {
+      let cons = document.getElementById("console");
+      let inp = ""
+      let inps = document.querySelectorAll(".num")
+      let errors = []
+      inps.forEach(i => {
+        if (!inp.includes(i.value)) {
+          inp += i.value;
+        } else {
+          errors.push("")
+        }
+      });
+
+      if (!errors.length) return inp;
+      else {
+        cons.prepend(
+
+          "Please enter a number with 4 different digits.\r\n"
+        );
+      }
+
+    }
+
+    function submitInput() {
+      let cons = document.getElementById("console");
+      let userInput = GetUserInput();
+      let results = check(userInput, rnd);
+
+      document.querySelector(".bulls_count").innerText = results.bulls;
+      document.querySelector(".cows_count").innerText = results.cows;
+      cons.prepend(
+        userInput +
+        " - " + results.bulls +
+        " bulls and " +
+        results.cows +
+        " cows." +
+        "\r\n"
+      );
+
+
+      if (results.bulls == 4) {
+        document.querySelector(".starting_screen").style.display = "none";
+        document.querySelector(".core_game").style.display = "none";
+        document.querySelector(".win_screen").style.display = "block";
+        cons.innerText = " ";
+      }
+    }
+    document.querySelector(".submit_input").addEventListener("click", e => {
+      submitInput();
+    })
+  </script>
+</body>
+
+</html>
